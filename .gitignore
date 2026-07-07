@@ -12,11 +12,13 @@
 !/README.md
 !/CHANGELOG.md
 !/AGENTS.md
+!/SKILL.md
 
 # Unignore subtrees:
 !/.github/
 !/docs/
 !/src/
+!/references/
 
 # Ignore noise:
 .DS_Store
