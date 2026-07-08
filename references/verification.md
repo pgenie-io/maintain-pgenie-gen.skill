@@ -42,7 +42,7 @@ Also maintain `CHANGELOG.md` (top section `# Upcoming`, promoted to `# vX.Y.Z` o
 
 - `dhall type --file gen/Gen.dhall` - the whole tree type-checks.
 - `dhall format --transitive --file gen/Gen.dhall` - canonical formatting.
-- Every `Interpreters/` module ends with `Algebra.module Input Output run`; every `Templates/` module ends with `Algebra.module Params run`. No exceptions.
+- Every `Interpreters/` module ends with `Sdk.Sigs.Interpreter.module InterpreterConfig.Type Input Output run`; every `Templates/` module ends with `Sdk.Sigs.Template.module Params run`. No exceptions.
 - Interpolation over concatenation: `"Optional<${t}>"`, not `++`.
 
 ## Release

@@ -7,7 +7,7 @@ Produce a hierarchical plan of **isolated tasks**, each executed in a **fresh ag
 The generator architecture is designed for module independence:
 
 - Templates are pure `Params -> Text`, cannot import the model or other templates, and are independently type-checkable with `dhall type`.
-- Interpreters have a fixed shape (`Algebra.module Input Output run`) and communicate only via primitives and Structures.
+- Interpreters have a fixed shape (`Sdk.Sigs.Interpreter.module InterpreterConfig.Type Input Output run`) and communicate only via primitives and Structures.
 - `Interpreters/Name.dhall` is the single owner of identifier handling.
 
 So module boundaries are task boundaries. One template or one interpreter per task is the natural grain.
@@ -23,7 +23,7 @@ So module boundaries are task boundaries. One template or one interpreter per ta
 
 Dependency order; tasks within a step are independent and run in parallel:
 
-1. **Scaffold**: repo layout, `gen/Deps/` (pinned Sdk, Prelude, Lude, Typeclasses - copy pins from java.gen), `gen/Algebras/`, `gen/Config.dhall`, empty `gen/Gen.dhall` wiring per architecture doc.
+1. **Scaffold**: repo layout, `gen/Deps/` (pinned Sdk, Prelude, Lude, Typeclasses - copy pins from java.gen), `gen/Config.dhall`, `gen/InterpreterConfig.dhall`, empty `gen/Gen.dhall` wiring per architecture doc.
 2. **`Interpreters/Name.dhall`**: all casing/escaping per grilling category 3.
 3. **Type mapping interpreters**: `Primitive`, `Scalar`, `Value` per grilling category 4.
 4. **Templates**: one task per template (statement module, type modules, test modules, manifest, README, …). Each reproduces its target text from the design artifact, flush-left per the unindented-output rule.
