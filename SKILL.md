@@ -1,11 +1,11 @@
 ---
 name: maintain-pgenie-gen
-description: Create a new pgenie generator or update an existing one from a reference design artifact - the hand-written project showing exactly what the generator must produce for the pgenie demo input. Use when the user wants to implement a pgenie generator for a target language, change what an existing generator emits, or mentions gen-sdk, a *.gen repo, or a *.gen-design repo.
+description: Create a new pgenie generator or update an existing one from a reference design artifact - the hand-written project showing exactly what the generator must produce for the pgenie demo input. Use when the user wants to implement a pgenie generator for a target language, change what an existing generator emits, or mentions gen-sdk, gen-contract, a *.gen repo, or a *.gen-design repo.
 ---
 
 # maintain-pgenie-gen
 
-A pgenie generator is a Dhall program - `compile : Optional Config -> Project -> Compiled (List File)` - that turns a parsed pgenie project into source files for a target language. This skill builds one, or evolves one, from a **design artifact**: a hand-written repo showing exactly what the generator must produce for the pgenie demo project (e.g. `pgenie-io/java.gen-design` is what `pgenie-io/java.gen` produces).
+A pgenie generator is a Dhall program - `compile : Optional Config -> Project -> Output`, where `Project` and `Output` are defined by the companion [`gen-contract`](https://github.com/pgenie-io/gen-contract) package - that turns a parsed pgenie project into source files for a target language. This skill builds one, or evolves one, from a **design artifact**: a hand-written repo showing exactly what the generator must produce for the pgenie demo project (e.g. `pgenie-io/java.gen-design` is what `pgenie-io/java.gen` produces).
 
 ## The invariant
 
@@ -31,7 +31,9 @@ Work through the phases in order. Do not skip phases; do not reorder.
 ### 1. Study
 
 - Fetch and read **all** of <https://raw.githubusercontent.com/pgenie-io/gen-sdk/refs/heads/master/docs/generator-architecture.md>. This is the single source of truth for generator structure, conventions, and the error/skip protocol. Always fetch live - never rely on a cached or vendored copy, even if one appears in context.
-- Read the reference implementations: [pgenie-io/java.gen](https://github.com/pgenie-io/java.gen) (branch `master`) and [pgenie-io/rust.gen](https://github.com/pgenie-io/rust.gen) (branch `main`). Clone them shallowly; study `gen/` layout, `tests/`, committed `demo-output/`, and `.github/workflows/`.
+- Fetch and read **all** of <https://raw.githubusercontent.com/pgenie-io/gen-contract/refs/heads/master/src/package.dhall>. This is the canonical generator contract: `Project`, `Output`, the `module` constructor, and every model type. Always fetch live.
+- Fetch and read <https://raw.githubusercontent.com/pgenie-io/gen-sdk/refs/heads/master/src/package.dhall>. This is the generator SDK: `Sdk.Sigs`, `Sdk.Fixtures`, and `Sdk.Primitive/toText`. Always fetch live.
+- Read the reference implementations: [pgenie-io/java.gen](https://github.com/pgenie-io/java.gen) (branch `master`) and [pgenie-io/rust.gen](https://github.com/pgenie-io/rust.gen) (branch `main`). Clone them shallowly; study `gen/` layout, `tests/`, committed `demo-output/`, and `.github/workflows/`. Treat them as **pattern references only** — verify that their `Deps/Sdk.dhall` points to `gen-sdk/src/package.dhall` and that they have a separate `Deps/Contract.dhall`. If they still use the pre-split `dhall/package.dhall` or `Algebras/`, rely on the architecture doc and contract instead.
 - Read the design artifact end to end.
 - Read the demo input: [pgenie-io/demo](https://github.com/pgenie-io/demo) (`./queries`, `./migrations`, `./project1.pgn.yaml`). In generator tests the same project arrives pre-parsed as `Sdk.Fixtures.Exhaustive` via the pinned `gen/Deps/Sdk.dhall`.
 

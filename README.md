@@ -18,17 +18,18 @@ If it's not quite right, polish it by telling your LLM what you need changed **i
 Claude Code:
 
 ```bash
-git clone https://github.com/pgenie-io/update-gen.skill ~/.claude/skills/maintain-pgenie-gen
+git clone https://github.com/pgenie-io/maintain-pgenie-gen.skill ~/.claude/skills/maintain-pgenie-gen
 ```
 
 Then ask your agent to implement (or update) a pGenie generator, giving it your design artifact and a path for the generator repo.
 
 ## How it works
 
-See [SKILL.md](SKILL.md). In short: the agent studies the [generator architecture](https://github.com/pgenie-io/gen-sdk/blob/master/docs/generator-architecture.md) and the existing generators ([java.gen](https://github.com/pgenie-io/java.gen), [rust.gen](https://github.com/pgenie-io/rust.gen)), validates that your design artifact builds and passes its tests, interviews you about everything the artifact doesn't pin down (type mappings, naming, how patterns extrapolate beyond the demo), then plans and executes the implementation as isolated tasks in fresh agent sessions, converging until the generator's output for the demo project becomes the same as in your design.
+See [SKILL.md](SKILL.md). In short: the agent studies the [generator architecture](https://github.com/pgenie-io/gen-sdk/blob/master/docs/generator-architecture.md) and the [generator contract](https://github.com/pgenie-io/gen-contract/blob/master/src/package.dhall), uses the existing generators ([java.gen](https://github.com/pgenie-io/java.gen), [rust.gen](https://github.com/pgenie-io/rust.gen)) as pattern references, validates that your design artifact builds and passes its tests, interviews you about everything the artifact doesn't pin down (type mappings, naming, how patterns extrapolate beyond the demo), then plans and executes the implementation as isolated tasks in fresh agent sessions, converging until the generator's output for the demo project becomes the same as in your design.
 
 ## Related repos
 
-- [gen-sdk](https://github.com/pgenie-io/gen-sdk) - the SDK and the authoritative architecture doc (fetched live by this skill)
+- [gen-contract](https://github.com/pgenie-io/gen-contract) - the canonical Dhall generator contract (`Project`, `module`, model types)
+- [gen-sdk](https://github.com/pgenie-io/gen-sdk) - the SDK: fixtures, sigs, and helpers (fetched live by this skill)
 - [demo](https://github.com/pgenie-io/demo) - the canonical input project
 - [java.gen-design](https://github.com/pgenie-io/java.gen-design), [rust.gen-design](https://github.com/pgenie-io/rust.gen-design), [c-sharp.gen-design](https://github.com/pgenie-io/c-sharp.gen-design), [ts.gen-design](https://github.com/pgenie-io/ts.gen-design) - design artifacts

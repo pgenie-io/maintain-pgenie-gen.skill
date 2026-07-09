@@ -23,7 +23,7 @@ So module boundaries are task boundaries. One template or one interpreter per ta
 
 Dependency order; tasks within a step are independent and run in parallel:
 
-1. **Scaffold**: repo layout, `gen/Deps/` (pinned Sdk, Prelude, Lude, Typeclasses - copy pins from java.gen), `gen/Config.dhall`, `gen/InterpreterConfig.dhall`, empty `gen/Gen.dhall` wiring per architecture doc.
+1. **Scaffold**: repo layout, `gen/Deps/` with two pinned SDK imports — `Contract.dhall` pointing to `gen-contract/src/package.dhall` and `Sdk.dhall` pointing to `gen-sdk/src/package.dhall` — plus Prelude, Lude, and Typeclasses; `gen/Config.dhall`; `gen/InterpreterConfig.dhall`; and `gen/Gen.dhall` wiring `Contract.module Config compile` per the architecture doc. Do not copy pins from a pre-split generator (one whose `Deps/Sdk.dhall` ends in `dhall/package.dhall`).
 2. **`Interpreters/Name.dhall`**: all casing/escaping per grilling category 3.
 3. **Type mapping interpreters**: `Primitive`, `Scalar`, `Value` per grilling category 4.
 4. **Templates**: one task per template (statement module, type modules, test modules, manifest, README, …). Each reproduces its target text from the design artifact, flush-left per the unindented-output rule.
@@ -31,7 +31,7 @@ Dependency order; tasks within a step are independent and run in parallel:
 6. **Integration**: `gen/compile.dhall`, `gen/Gen.dhall`, `tests/Exhaustive.dhall` applying the generator to `Sdk.Fixtures.Exhaustive`, first materialization.
 7. **Convergence loop**: diff-driven fixes until verification passes (see verification.md). Convergence fixes are dispatched as fresh tasks, one per divergent module cluster.
 
-In the update flow, plan only the affected subtree: diff the design artifact change, map divergent files back to owning templates/interpreters, one task per affected module.
+In the update flow, plan only the affected subtree: diff the design artifact change, map divergent files back to owning templates/interpreters, one task per affected module. If a generator still uses the pre-split single `Deps/Sdk.dhall` import, add `Deps/Contract.dhall` and update imports as part of the first affected task.
 
 ## Execution
 
